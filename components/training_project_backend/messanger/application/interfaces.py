@@ -12,7 +12,7 @@ class UsersRepo(ABC):
         ...
 
     @abstractmethod
-    def get_by_login(self, login_: int) -> Optional[User]:
+    def get_by_login(self, login_: str) -> Optional[User]:
         ...
 
     @abstractmethod
