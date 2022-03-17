@@ -10,7 +10,7 @@ skinparam linetype ortho
 entity user {
   * **id**  :  int
   __
-  **login**  :  varchar
+  **login**  :  varchar (unique)
   __
   **password**  :  text
   __
@@ -21,6 +21,10 @@ entity user {
 
 entity chat {
   * **id**  :  int
+  __
+  **title**  :  varchar
+  __
+  **description**  :  text
 }
 
 entity chat_participant {
@@ -28,13 +32,13 @@ entity chat_participant {
   __
   * **user_id**  :  int
   __
-  * **creator**  :  bool
+  **creator**  :  bool
   __
-  * **banned**  :  bool
+  **date added**  :  datetime
   __
-  * **came out**  :  bool
+  **banned**  :  datetime | NULL
   __
-  * **Date added**  :  datetime
+  **left**  :  datetime | NULL
 }
 
 entity message {
@@ -44,11 +48,13 @@ entity message {
   __
   * **user_id**  :  int
   __
-  * **Date created**  :  datetime
+  **text**  :  text
+  __
+  **Date created**  :  datetime
 }
 
 user ||--o{ chat_participant
 chat_participant }|--|| chat
 user ||--o{ message
-message }|--|| chat
+message }o--|| chat
 @enduml
