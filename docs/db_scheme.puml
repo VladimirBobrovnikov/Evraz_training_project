@@ -1,0 +1,54 @@
+@startuml
+
+header Демо проект для компании Евраз
+title Схема БД
+
+hide circle
+skinparam linetype ortho
+
+
+entity user {
+  * **id**  :  int
+  __
+  **login**  :  varchar
+  __
+  **password**  :  text
+  __
+  **name**  :  varchar
+  __
+  **email**  :  varchar
+}
+
+entity chat {
+  * **id**  :  int
+}
+
+entity chat_participant {
+  * **chat_id**  :  int
+  __
+  * **user_id**  :  int
+  __
+  * **creator**  :  bool
+  __
+  * **banned**  :  bool
+  __
+  * **came out**  :  bool
+  __
+  * **Date added**  :  datetime
+}
+
+entity message {
+  * **id**  :  int
+  __
+  * **chat_id**  :  int
+  __
+  * **user_id**  :  int
+  __
+  * **Date created**  :  datetime
+}
+
+user ||--o{ chat_participant
+chat_participant }|--|| chat
+user ||--o{ message
+message }|--|| chat
+@enduml

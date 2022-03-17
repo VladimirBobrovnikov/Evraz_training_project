@@ -1,0 +1,56 @@
+@startuml
+
+header Демо проект для компании Евраз
+title Диаграмма прецедентов
+
+left to right direction
+
+rectangle "Авторизация" {
+  usecase "Зарегистрироваться" as sign_up
+  usecase "Авторизоваться" as sign_in
+  usecase "Разлогиниться" as logout
+
+}
+
+rectangle "Чат" {
+  usecase "создать чат" as create_chat
+  usecase "изменить информацию о чате" as change_chat
+  usecase "посмотреть информацию о чате" as chat_info
+  usecase "удалить чат" as delete_chat
+  usecase "добавить участника" as add_user
+  usecase "Получить список сообщений" as get_messages_list
+  usecase "Отправить сообщение в чат" as send_message
+  usecase "покинуть чат" as leave_chat
+  usecase "вернуться в чат" as return_in_chat
+  usecase "посмотреть список участников чата" as get_users_list
+}
+
+
+rectangle "Пользователи" {
+  usecase "Найти пользователя" as search_user
+}
+
+
+actor "Гость" as guest
+guest -- sign_up
+guest -- sign_in
+
+actor "Пользователь" as user
+user -- logout
+user -- create_chat
+user -- leave_chat
+user -- return_in_chat
+
+actor "Создатель чата" as chat_creator
+chat_creator -- change_chat
+chat_creator -- delete_chat
+chat_creator -- add_user
+chat_creator -- search_user
+
+actor "Участник чата" as chat_participant
+chat_participant -- get_messages_list
+chat_participant -- send_message
+chat_participant -- get_users_list
+chat_participant -- chat_info
+
+@enduml
