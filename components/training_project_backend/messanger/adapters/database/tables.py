@@ -6,8 +6,12 @@ from sqlalchemy import (
     MetaData,
     String,
     Table,
+    DateTime,
+    BigInteger,
+    Boolean
 )
 
+from sqlalchemy.orm import relationship, backref
 naming_convention = {
     'ix': 'ix_%(column_0_label)s',
     'uq': 'uq_%(table_name)s_%(column_0_name)s',
@@ -23,53 +27,42 @@ metadata = MetaData(naming_convention=naming_convention)
 
 # yapf: disable
 
-customers = Table(
-    'customers',
+user = Table(
+    'users',
     metadata,
-    Column('id', Integer, primary_key=True),
+    Column('id', BigInteger, autoincrement=True, primary_key=True),
+    Column('login', String, unique=True),
+    Column('password', String),
     Column('email', String, nullable=True),
+    Column('date_registration', DateTime),
 )
 
-products = Table(
-    'products',
+chat = Table(
+    'chats',
     metadata,
-    Column('sku', String, primary_key=True),
-    Column('title', String, nullable=False),
-    Column('description', String, nullable=False),
-    Column('price', Float, nullable=False),
+    Column('id', BigInteger, autoincrement=True, primary_key=True),
+    Column('title', String, unique=True),
+    Column('description', String),
 )
 
-carts = Table(
-    'carts',
+message = Table(
+    'messages',
     metadata,
-    Column('id', Integer, primary_key=True),
-    Column('customer_id', ForeignKey('customers.id'), nullable=False),
+    Column('id', BigInteger, autoincrement=True, primary_key=True),
+    Column('chat_id', ForeignKey('chats.id'), unique=True),
+    Column('user_id', ForeignKey('users.id'), unique=True),
+    Column('text', String),
+    Column('date_created', DateTime),
 )
 
-cart_positions = Table(
-    'cart_positions',
+chat_participant = Table(
+    'chat_participant',
     metadata,
-    Column('id', Integer, primary_key=True),
-    Column('product_sku', ForeignKey('products.sku'), nullable=False),
-    Column('cart_id', ForeignKey('carts.id'), nullable=False),
-    Column('quantity', Integer, nullable=False),
+    Column('id', BigInteger, autoincrement=True, primary_key=True),
+    Column('chat_id', ForeignKey('chats.id'), unique=True),
+    Column('user_id', ForeignKey('users.id'), unique=True),
+    Column('creator', Boolean),
+    Column('banned', DateTime, nullable=True),
+    Column('left', DateTime, nullable=True),
+    Column('date_added', DateTime),
 )
-
-orders = Table(
-    'orders',
-    metadata,
-    Column('number', Integer, primary_key=True),
-    Column('customer_id', ForeignKey('customers.id'), nullable=False),
-)
-
-order_lines = Table(
-    'order_lines',
-    metadata,
-    Column('order_number', ForeignKey('orders.number'), primary_key=True),
-    Column('product_sku', String, nullable=False),
-    Column('product_title', String, nullable=False),
-    Column('price', Float, nullable=False),
-    Column('quantity', Integer, nullable=False),
-)
-
-# yapf: enable

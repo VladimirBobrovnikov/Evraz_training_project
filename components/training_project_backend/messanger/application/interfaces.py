@@ -16,11 +16,11 @@ class UsersRepo(ABC):
         ...
 
     @abstractmethod
-    def add(self, customer: User):
+    def add(self, user: User):
         ...
 
     @abstractmethod
-    def cheng(self, customer: User):
+    def cheng(self, user: User):
         ...
 
 
@@ -40,26 +40,22 @@ class ChatsRepo(ABC):
         ...
 
     @abstractmethod
-    def add_user(self, user: User, chat: Chat):
-        ...
-
-    @abstractmethod
-    def create(self, chat: Chat) -> Chat:
+    def create(self, chat: Chat) -> int:
         ...
 
     @abstractmethod
     def update(self, id_: int, chat: Chat) -> Chat:
         ...
 
-    @abstractmethod
-    def delete(self, chat_id: int):
-        ...
+    # @abstractmethod
+    # def delete(self, chat_id: int):
+    #     ...
 
 
 class ChatParticipantRepo(ABC):
 
     @abstractmethod
-    def create(self, user_id: int, chat_id: int) -> ChatParticipant:
+    def add_user_to_chat(self, chat_participant: ChatParticipant) -> int:
         ...
 
     @abstractmethod
@@ -67,7 +63,7 @@ class ChatParticipantRepo(ABC):
         ...
 
     @abstractmethod
-    def left(self, user_id: int, chat_id: int):
+    def left(self, chat_participant: ChatParticipant):
         ...
 
     @abstractmethod
@@ -75,12 +71,12 @@ class ChatParticipantRepo(ABC):
         ...
 
     @abstractmethod
-    def get_dates_added_and_restrictions(self, chat_id: int, user_id: int) -> Tuple[datetime.datetime, Union[datetime.datetime, None]]:
+    def get_dates_added_and_restrictions(self, chat_participant: ChatParticipant) -> ChatParticipant:
         ...
 
 
     @abstractmethod
-    def return_to_chat(self, user_id: int, chat_id: int):
+    def return_to_chat(self, chat_participant: ChatParticipant):
         ...
 
 
@@ -108,6 +104,6 @@ class MessageRepo(ABC):
         ...
 
     @abstractmethod
-    def add_message(self, message: Message) -> Message:
+    def add_message(self, message: Message) -> int:
         ...
 

@@ -1,21 +1,29 @@
-from evraz.classic.app.errors import AppError
+from classic.app.errors import AppError
 
 
-class NoProduct(AppError):
-    msg_template = "No product with SKU '{sku}'"
-    code = 'shop.no_product'
+class NoChat(AppError):
+	msg_template = "No chats with id '{id}'"
+	code = 'messanger.no_chat'
 
 
-class NoOrder(AppError):
-    msg_template = "No order with number '{number}'"
-    code = 'shop.no_order'
+class NoChats(AppError):
+	msg_template = "No chats with '{word}' in title"
+	code = 'messanger.no_chats'
 
 
-class NoCustomer(AppError):
-    msg_template = "No customer with id '{id}'"
-    code = 'shop.no_customer'
+class NoMessage(AppError):
+	msg_template = "No message with id '{id}'"
+	code = 'messanger.no_message'
 
 
-class EmptyCart(AppError):
-    msg_template = "Cart is empty"
-    code = 'shop.cart_is_empty'
+class NoUser(AppError):
+	msg_template = "No users with id '{id}'"
+	code = 'messanger.no_user'
+
+class NoMessages(AppError):
+	msg_template = "No message in chat '{chat_id}'"
+	code = 'messanger.no_messages'
+
+# class EmptyCart(AppError):
+#     msg_template = "Cart is empty"
+#     code = 'shop.cart_is_empty'

@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     def LOGGING_CONFIG(self):
         return {
             'loggers': {
-                'gunicorn': {
+                'waitress': {
                     'handlers': ['default'],
                     'level': self.LOGGING_LEVEL,
                     'propagate': False

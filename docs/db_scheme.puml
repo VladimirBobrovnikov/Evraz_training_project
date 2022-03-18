@@ -16,7 +16,7 @@ entity user {
   __
   **name**  :  varchar
   __
-  **email**  :  varchar
+  email  :  varchar
 }
 
 entity chat {
@@ -24,7 +24,7 @@ entity chat {
   __
   **title**  :  varchar
   __
-  **description**  :  text
+  description  :  text
 }
 
 entity chat_participant {
@@ -36,9 +36,9 @@ entity chat_participant {
   __
   **date added**  :  datetime
   __
-  **banned**  :  datetime | NULL
+  banned  :  datetime | NULL
   __
-  **left**  :  datetime | NULL
+  left  :  datetime | NULL
 }
 
 entity message {

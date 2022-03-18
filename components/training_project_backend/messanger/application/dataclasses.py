@@ -27,10 +27,10 @@ class Message:
 
 @attr.dataclass
 class ChatParticipant:
-    chat: Chat
-    user: User
+    chat_id: int
+    user_id: int
     creator: bool = False
-    banned: bool = False
-    came_out: bool = False
+    banned: Optional[datetime.datetime] = None
+    left: Optional[datetime.datetime] = None
     date_added: datetime.datetime = datetime.datetime.utcnow()
     id: Optional[int] = None
