@@ -7,9 +7,10 @@ import attr
 class User:
     login: str
     password: str
-    email: Optional[str]
+    email: Optional[str] = None
     id: Optional[int] = None
-    date_registration:  datetime.datetime = datetime.datetime.utcnow()
+    date_registration:  float = datetime.datetime.utcnow().timestamp()
+
 
 @attr.dataclass
 class Chat:
@@ -17,20 +18,23 @@ class Chat:
     description: str
     id: Optional[int] = None
 
+
 @attr.dataclass
 class Message:
     chat_id: int
     user_id: int
     text: str
-    date_created:  datetime.datetime = datetime.datetime.utcnow()
+    date_created:  float = datetime.datetime.utcnow().timestamp()
+    user: Optional[User] = None
     id: Optional[int] = None
+
 
 @attr.dataclass
 class ChatParticipant:
     chat_id: int
     user_id: int
     creator: bool = False
-    banned: Optional[datetime.datetime] = None
-    left: Optional[datetime.datetime] = None
-    date_added: datetime.datetime = datetime.datetime.utcnow()
+    banned: Optional[float] = None
+    left: Optional[float] = None
+    date_added: float = datetime.datetime.utcnow().timestamp()
     id: Optional[int] = None

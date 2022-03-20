@@ -59,7 +59,7 @@ class ChatParticipantRepo(ABC):
         ...
 
     @abstractmethod
-    def block_user(self, user_id: int, chat_id: int):
+    def block_user(self, chat_participant: ChatParticipant):
         ...
 
     @abstractmethod
@@ -98,8 +98,8 @@ class MessageRepo(ABC):
     @abstractmethod
     def get_messages_by_chat(self,
                              chat_id: int,
-                             data_start: Optional[datetime.datetime],
-                             data_stop: Optional[datetime.datetime]
+                             data_start: Optional[float],
+                             data_stop: Optional[float]
                              ) -> Optional[List[Message]]:
         ...
 

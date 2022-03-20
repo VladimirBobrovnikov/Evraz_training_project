@@ -1,14 +1,21 @@
-from typing import List, Optional, Tuple
 import datetime
-from pydantic import validate_arguments
+import os
+from typing import List, Optional
+import jwt
+from dotenv import load_dotenv
 
 from classic.app import DTO, validate_with_dto
 from classic.aspects import PointCut
 from classic.components import component
-
+from pydantic import validate_arguments
 
 from . import errors, interfaces
 from .dataclasses import User, Chat, Message, ChatParticipant
+
+# dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+# if os.path.exists(dotenv_path):
+#     load_dotenv(dotenv_path)
+
 
 join_points = PointCut()
 join_point = join_points.join_point
@@ -21,7 +28,8 @@ class UserInfo(DTO):
     id: Optional[int] = None
 
 
-class ChatInfo(DTO):
+class ChatInfoForCreate(DTO):
+    user_id: int
     title: str
     description: Optional[str] = None
     id: Optional[int] = None
@@ -37,7 +45,7 @@ class MessageInfo(DTO):
     chat_id: int
     user_id: int
     text: str
-    id: Optional[int]
+    id: Optional[int] = None
 
 
 class ChatParticipantInfo(DTO):
@@ -46,7 +54,7 @@ class ChatParticipantInfo(DTO):
     creator: bool = False
     banned: bool = False
     came_out: bool = False
-    date_added: datetime.datetime = datetime.datetime.utcnow()
+    date_added: float = datetime.datetime.utcnow().timestamp()
     id: Optional[int] = None
 
 
@@ -72,17 +80,24 @@ class Messanger:
 
     @join_point
     @validate_with_dto
-    def create_chat(self, chat_info: ChatInfo) -> int:
-        chat = chat_info.create_obj(Chat)
-        return self.chat_repo.create(chat)
+    def create_chat(self, chat_info: ChatInfoForCreate):
+        chat = Chat(chat_info.title, chat_info.description)
+        chat_id = self.chat_repo.create(chat)
+        chat_participant = ChatParticipant(
+            chat_id=chat_id,
+            user_id=chat_info.user_id,
+            creator=True,
+            date_added=datetime.datetime.utcnow().timestamp())
+        self.chat_participant_repo.add_user_to_chat(chat_participant)
 
     # @join_point
     # @validate_arguments
     # def delete_chat(self, chat_id: id):
     #     self.chat_repo.delete(chat_id)
 
+
     @join_point
-    @validate_arguments
+    @validate_with_dto
     def add_user_to_chat(self, chat_participant_info: ChatParticipantInfo) -> int:
         chat_participant = chat_participant_info.create_obj(ChatParticipant)
         return self.chat_participant.add_user_to_chat(chat_participant)
@@ -96,7 +111,7 @@ class Messanger:
         return chat
 
     @join_point
-    @validate_arguments
+    @validate_with_dto
     def change_chat_info(self, chat_info: ChatInfoForChange):
         old_chat = self.chat_repo.get_by_id(chat_info.id)
         if chat_info.title:
@@ -106,18 +121,24 @@ class Messanger:
         self.chat_repo.update(chat_info.id, old_chat)
 
     @join_point
+    @validate_with_dto
+    def block_user(self, chat_participant_info: ChatParticipantInfo):
+        chat_participant = chat_participant_info.create_obj(ChatParticipant)
+        self.chat_participant_repo.block_user(chat_participant)
+
+    @join_point
     @validate_arguments
     def get_chats_users(self, chat_id: int) -> List[User]:
         return self.chat_participant.get_chats_users(chat_id)
 
     @join_point
-    @validate_arguments
-    def send_message(self, message_info: MessageInfo) -> int:
+    @validate_with_dto
+    def send_message(self, message_info: MessageInfo):
         message = message_info.create_obj(Message)
-        return self.message_repo.add_message(message)
+        self.message_repo.add_message(message)
 
     @join_point
-    @validate_arguments
+    @validate_with_dto
     def get_chats_message(self,  chat_participant_info: ChatParticipantInfo) -> Optional[List[Message]]:
         chat_participant_valid = chat_participant_info.create_obj(ChatParticipant)
         chat_participant = self.chat_participant_repo.get_dates_added_and_restrictions(chat_participant_valid)
@@ -132,13 +153,13 @@ class Messanger:
         return messages
 
     @join_point
-    @validate_arguments
+    @validate_with_dto
     def left(self, chat_participant_info: ChatParticipantInfo):
         chat_participant = chat_participant_info.create_obj(ChatParticipant)
         self.chat_participant.left(chat_participant)
 
     @join_point
-    @validate_arguments
+    @validate_with_dto
     def return_to_chat(self, chat_participant_info: ChatParticipantInfo):
         chat_participant = chat_participant_info.create_obj(ChatParticipant)
         self.chat_participant.return_to_chat(chat_participant)
@@ -149,10 +170,20 @@ class Profil:
     user_repo: interfaces.UsersRepo
 
     @join_point
-    @validate_arguments
-    def create_user(self, user_info: UserInfo) -> Chat:
+    @validate_with_dto
+    def create_user(self, user_info: UserInfo) -> str:
         user = user_info.create_obj(User)
-        return self.user_repo.add(user)
+        user = self.user_repo.add(user)
+        # return create_token(user.id, user.login, user.password)
+        payload = {
+            "sub": user.id,
+            'login': user.login,
+            'name': user.login,
+            'password': user.password,
+            'groups': 'admins',
+        }
+        token = jwt.encode(payload=payload, key='Very secret_key')
+        return token
 
     @join_point
     @validate_arguments

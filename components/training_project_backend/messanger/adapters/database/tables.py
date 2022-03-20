@@ -30,17 +30,17 @@ metadata = MetaData(naming_convention=naming_convention)
 user = Table(
     'users',
     metadata,
-    Column('id', BigInteger, autoincrement=True, primary_key=True),
+    Column('id', Integer, autoincrement=True, primary_key=True),
     Column('login', String, unique=True),
     Column('password', String),
     Column('email', String, nullable=True),
-    Column('date_registration', DateTime),
+    Column('date_registration', Float),
 )
 
 chat = Table(
     'chats',
     metadata,
-    Column('id', BigInteger, autoincrement=True, primary_key=True),
+    Column('id', Integer, autoincrement=True, primary_key=True),
     Column('title', String, unique=True),
     Column('description', String),
 )
@@ -48,21 +48,21 @@ chat = Table(
 message = Table(
     'messages',
     metadata,
-    Column('id', BigInteger, autoincrement=True, primary_key=True),
+    Column('id', Integer, autoincrement=True, primary_key=True),
     Column('chat_id', ForeignKey('chats.id'), unique=True),
     Column('user_id', ForeignKey('users.id'), unique=True),
     Column('text', String),
-    Column('date_created', DateTime),
+    Column('date_created', Float),
 )
 
 chat_participant = Table(
     'chat_participant',
     metadata,
-    Column('id', BigInteger, autoincrement=True, primary_key=True),
+    Column('id', Integer, autoincrement=True, primary_key=True),
     Column('chat_id', ForeignKey('chats.id'), unique=True),
     Column('user_id', ForeignKey('users.id'), unique=True),
     Column('creator', Boolean),
-    Column('banned', DateTime, nullable=True),
-    Column('left', DateTime, nullable=True),
-    Column('date_added', DateTime),
+    Column('banned', Float, nullable=True),
+    Column('left', Float, nullable=True),
+    Column('date_added', Float),
 )

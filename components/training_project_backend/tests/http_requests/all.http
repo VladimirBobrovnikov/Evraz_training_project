@@ -1,0 +1,22 @@
+POST http://127.0.0.1:8000/api/profil/create_user
+Content-Type: application/json
+
+{
+  "login": "vova",
+  "password": 1234
+}
+
+###
+GET http://127.0.0.1:8000/api/profil/user
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.0dqY5M-dD_tYHeB2q_qLlKrKW4Svo3c9rp21lQuebE4
+
+###
+POST http://127.0.0.1:8000/api/messanger/create_chat
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.0dqY5M-dD_tYHeB2q_qLlKrKW4Svo3c9rp21lQuebE4
+Content-Type: application/json
+
+{
+  "title": "vovin chat",
+  "description": "first chat"
+}
+###

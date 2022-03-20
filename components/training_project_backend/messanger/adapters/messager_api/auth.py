@@ -16,4 +16,10 @@ dummy_strategy = strategies.Dummy(
     groups=(Groups.ADMINS.name, ),
 )
 
+jwt_strategy = strategies.JWT(
+    secret_key='Very secret_key'
+)
+
 ALL_GROUPS = (Groups.ADMINS, )
+
+
