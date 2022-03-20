@@ -16,8 +16,8 @@ from .join_points import join_point
 class Messanger:
 	messanger: services.Messanger
 
-	@authenticate
 	@join_point
+	@authenticate
 	def on_get_chat(self, request, response):
 		chat = self.messanger.get_chats_info(**request.params)
 		response.media = {
@@ -26,8 +26,8 @@ class Messanger:
 			'description': chat.description
 		}
 
-	@authenticate
 	@join_point
+	@authenticate
 	def on_get_search_chats(self, request, response):
 		chats = self.messanger.search_chats(**request.params)
 		response.media = [
@@ -38,10 +38,10 @@ class Messanger:
 			} for chat in chats
 		]
 
-	@authenticate
 	@join_point
+	@authenticate
 	def on_get_chats_users(self, request, response):
-		users = self.messanger.get_chats_users(**request.params)
+		users = self.messanger.get_chats_users(user_id=request.context.client.user_id, **request.params)
 		response.media = [
 			{
 				'id': user.id,
@@ -51,10 +51,10 @@ class Messanger:
 			} for user in users
 		]
 
-	@authenticate
 	@join_point
+	@authenticate
 	def on_get_chats_message(self, request, response):
-		messages = self.messanger.get_chats_message(request.context.client.user_id, **request.params)
+		messages = self.messanger.get_chats_message(user_id=request.context.client.user_id, **request.params)
 		response.media = [
 			{
 				'id': message.id,
@@ -65,48 +65,48 @@ class Messanger:
 			} for message in messages
 		]
 
-	@authenticate
 	@join_point
+	@authenticate
 	def on_post_create_chat(self, request, response):
 		self.messanger.create_chat(user_id=request.context.client.user_id, **request.media)
 		response.media = {
 			'message': 'Сhat successfully created'
 		}
 
-	@authenticate
 	@join_point
+	@authenticate
 	def on_post_add_user_to_chat(self, request, response):
-		self.messanger.add_user_to_chat(**request.media)
+		self.messanger.add_user_to_chat(user_id=request.context.client.user_id, **request.media)
 		response.media = {
 			'message': 'User successfully added'
 		}
 
-	@authenticate
 	@join_point
+	@authenticate
 	def on_post_change_chat_info(self, request, response):
-		self.messanger.change_chat_info(**request.media)
+		self.messanger.change_chat_info(user_id=request.context.client.user_id, **request.media)
 		response.media = {
 			'message': 'Сhat successfully changed'
 		}
 
-	@authenticate
 	@join_point
+	@authenticate
 	def on_post_send_message(self, request, response):
-		self.messanger.send_message(**request.media)
+		self.messanger.send_message(user_id=request.context.client.user_id, **request.media)
 		response.media = {
 			'message': 'Message successfully send'
 		}
 
-	@authenticate
 	@join_point
+	@authenticate
 	def on_post_left(self, request, response):
 		self.messanger.left(**request.media)
 		response.media = {
 			'message': 'You have left the chat'
 		}
 
-	@authenticate
 	@join_point
+	@authenticate
 	def on_post_return_to_chat(self, request, response):
 		self.messanger.return_to_chat(**request.media)
 		response.media = {

@@ -67,11 +67,7 @@ class ChatParticipantRepo(ABC):
         ...
 
     @abstractmethod
-    def get_chats_users(self, chat_id: int) -> List[User]:
-        ...
-
-    @abstractmethod
-    def get_dates_added_and_restrictions(self, chat_participant: ChatParticipant) -> ChatParticipant:
+    def get_chats_users(self, chat_id: int) -> List[ChatParticipant]:
         ...
 
 
@@ -79,6 +75,9 @@ class ChatParticipantRepo(ABC):
     def return_to_chat(self, chat_participant: ChatParticipant):
         ...
 
+    @abstractmethod
+    def search_chat_participant(self, chat_id: int, user_id: int) -> ChatParticipant:
+        ...
 
 class MessageRepo(ABC):
 

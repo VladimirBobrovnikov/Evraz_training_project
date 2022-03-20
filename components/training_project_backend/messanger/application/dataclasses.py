@@ -37,4 +37,5 @@ class ChatParticipant:
     banned: Optional[float] = None
     left: Optional[float] = None
     date_added: float = datetime.datetime.utcnow().timestamp()
+    message_id: Optional[int] = None
     id: Optional[int] = None

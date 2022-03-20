@@ -72,9 +72,8 @@ class ChatRepo(BaseRepository, interfaces.ChatsRepo):
 	def update(self, id_: int, chat: Chat):
 		values = asdict(chat)
 		del values['id']
-		query = update(User).where(User.id == id_).values(**values)
+		query = update(Chat).where(Chat.id == id_).values(**values)
 		self.session.execute(query)
-
 
 # def delete(self, chat_id: int):
 #     pass
@@ -103,14 +102,14 @@ class ChatParticipantRepo(BaseRepository, interfaces.ChatParticipantRepo):
 			ChatParticipant.user_id == chat_participant.user_id).values(**values)
 		self.session.execute(query)
 
-	def get_chats_users(self, chat_id: int) -> List[User]:
+	def get_chats_users(self, chat_id: int) -> List[ChatParticipant]:
 		query = select(ChatParticipant).where(ChatParticipant.chat_id == chat_id)
 		return self.session.execute(query).scalars().all()
 
-	def get_dates_added_and_restrictions(self, chat_participant: ChatParticipant) -> ChatParticipant:
+	def search_chat_participant(self, chat_id: int, user_id: int) -> ChatParticipant:
 		query = select(ChatParticipant).where(
-			ChatParticipant.chat_id == chat_participant.chat_id,
-			ChatParticipant.user_id == chat_participant.user_id)
+			ChatParticipant.chat_id == chat_id,
+			ChatParticipant.user_id == user_id)
 		return self.session.execute(query).scalars().one_or_none()
 
 	def return_to_chat(self, chat_participant: ChatParticipant):
@@ -120,6 +119,9 @@ class ChatParticipantRepo(BaseRepository, interfaces.ChatParticipantRepo):
 			ChatParticipant.chat_id == chat_participant.chat_id,
 			ChatParticipant.user_id == chat_participant.user_id).values(**values)
 		self.session.execute(query)
+
+
+
 
 
 @component
@@ -144,13 +146,12 @@ class MessageRepo(BaseRepository, interfaces.MessageRepo):
 							 data_stop: Optional[float] = None
 							 ) -> Optional[List[Message]]:
 		query = (
-			select(Message).where(Message.chat_id == chat_id).order_by(Message.date_created)
+			select(Message).where(Message.chat_id == chat_id).order_by(Message.date_created).
+				where(Message.date_created <= data_start)
 		)
 
-		if data_start is not None:
-			query = query.where(Message.date_created >= data_start)
 		if data_stop is not None:
-			query = query.where(Message.date_created <= data_stop)
+			query = query.where(Message.date_created >= data_stop)
 		return self.session.execute(query).scalars().all()
 
 	def add_message(self, message: Message) -> int:

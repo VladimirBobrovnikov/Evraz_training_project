@@ -20,3 +20,59 @@ Content-Type: application/json
   "description": "first chat"
 }
 ###
+POST http://127.0.0.1:8000/api/messanger/send_message
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.0dqY5M-dD_tYHeB2q_qLlKrKW4Svo3c9rp21lQuebE4
+Content-Type: application/json
+
+{
+  "chat_id": 1,
+  "text": "first message. Creator was send 'Hello'"
+}
+###
+GET http://127.0.0.1:8000/api/messanger/chat?chat_id=1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.0dqY5M-dD_tYHeB2q_qLlKrKW4Svo3c9rp21lQuebE4
+
+
+###
+POST http://127.0.0.1:8000/api/messanger/change_chat_info
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.0dqY5M-dD_tYHeB2q_qLlKrKW4Svo3c9rp21lQuebE4
+Content-Type: application/json
+
+{
+  "chat_id": 1,
+  "description": "CHANGED INFO in first chat"
+}
+###
+GET http://127.0.0.1:8000/api/messanger/chat?chat_id=1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.0dqY5M-dD_tYHeB2q_qLlKrKW4Svo3c9rp21lQuebE4
+###
+POST http://127.0.0.1:8000/api/profil/create_user
+Content-Type: application/json
+
+{
+  "login": "vasya",
+  "password": 2222
+}
+###
+GET http://127.0.0.1:8000/api/profil/user
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImxvZ2luIjoidmFzeWEiLCJuYW1lIjoidmFzeWEiLCJwYXNzd29yZCI6IjIyMjIiLCJncm91cHMiOiJhZG1pbnMifQ.R_fwWSnrXakaCDXsyhrhtqWqkhRO9jUs5cE9GEtsHm8
+
+###
+POST http://127.0.0.1:8000/api/messanger/add_user_to_chat
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.0dqY5M-dD_tYHeB2q_qLlKrKW4Svo3c9rp21lQuebE4
+Content-Type: application/json
+
+{
+  "chat_id": 1,
+  "user_id_to_added": 2
+}
+
+###
+GET http://127.0.0.1:8000/api/messanger/chats_users?chat_id=1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.0dqY5M-dD_tYHeB2q_qLlKrKW4Svo3c9rp21lQuebE4
+
+###
+GET http://127.0.0.1:8000/api/messanger/chats_message?chat_id=1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.0dqY5M-dD_tYHeB2q_qLlKrKW4Svo3c9rp21lQuebE4
+
+###

@@ -36,7 +36,8 @@ class ChatInfoForCreate(DTO):
 
 
 class ChatInfoForChange(DTO):
-    id: int
+    user_id: int
+    chat_id: int
     title: Optional[str] = None
     description: Optional[str] = None
 
@@ -97,10 +98,12 @@ class Messanger:
 
 
     @join_point
-    @validate_with_dto
-    def add_user_to_chat(self, chat_participant_info: ChatParticipantInfo) -> int:
-        chat_participant = chat_participant_info.create_obj(ChatParticipant)
-        return self.chat_participant.add_user_to_chat(chat_participant)
+    @validate_arguments()
+    def add_user_to_chat(self, user_id: int, chat_id: int, user_id_to_added: int) -> int:
+        chat_participant = self.chat_participant_repo.search_chat_participant(chat_id, user_id)
+        if chat_participant and chat_participant.creator:
+            new_chat_participant = ChatParticipant(chat_id, user_id=user_id_to_added)
+            return self.chat_participant_repo.add_user_to_chat(new_chat_participant)
 
     @join_point
     @validate_arguments
@@ -113,12 +116,14 @@ class Messanger:
     @join_point
     @validate_with_dto
     def change_chat_info(self, chat_info: ChatInfoForChange):
-        old_chat = self.chat_repo.get_by_id(chat_info.id)
-        if chat_info.title:
-            old_chat.title = chat_info.title
-        if chat_info.description:
-            old_chat.description = chat_info.description
-        self.chat_repo.update(chat_info.id, old_chat)
+        chat_participant = self.chat_participant_repo.search_chat_participant(chat_info.chat_id, chat_info.user_id)
+        if chat_participant and chat_participant.creator:
+            old_chat = self.chat_repo.get_by_id(chat_info.chat_id)
+            if chat_info.title:
+                old_chat.title = chat_info.title
+            if chat_info.description:
+                old_chat.description = chat_info.description
+            self.chat_repo.update(chat_info.chat_id, old_chat)
 
     @join_point
     @validate_with_dto
@@ -128,8 +133,11 @@ class Messanger:
 
     @join_point
     @validate_arguments
-    def get_chats_users(self, chat_id: int) -> List[User]:
-        return self.chat_participant.get_chats_users(chat_id)
+    def get_chats_users(self, user_id: int, chat_id: int) -> List[User]:
+        chat_participant = self.chat_participant_repo.search_chat_participant(chat_id, user_id)
+        if chat_participant:
+            participants = self.chat_participant_repo.get_chats_users(chat_id)
+            return [self.user_repo.get_by_id(participant.user_id) for participant in participants]
 
     @join_point
     @validate_with_dto
@@ -138,19 +146,19 @@ class Messanger:
         self.message_repo.add_message(message)
 
     @join_point
-    @validate_with_dto
-    def get_chats_message(self,  chat_participant_info: ChatParticipantInfo) -> Optional[List[Message]]:
-        chat_participant_valid = chat_participant_info.create_obj(ChatParticipant)
-        chat_participant = self.chat_participant_repo.get_dates_added_and_restrictions(chat_participant_valid)
-        data_add = chat_participant.date_added
-        if chat_participant.banned and chat_participant.left:
-            data_blocked = min(chat_participant.banned, chat_participant.left)
-        else:
-            data_blocked = chat_participant.banned or chat_participant.left
-        messages = self.message_repo.get_messages_by_chat(chat_participant.chat_id, data_add, data_blocked)
-        if messages is None:
-            raise errors.NoMessages(chat_id=chat_participant.chat_id)
-        return messages
+    @validate_arguments()
+    def get_chats_message(self, user_id: int, chat_id: int) -> Optional[List[Message]]:
+        chat_participant = self.chat_participant_repo.search_chat_participant(chat_id, user_id)
+        if chat_participant:
+            data_add = chat_participant.date_added
+            if chat_participant.banned and chat_participant.left:
+                data_blocked = min(chat_participant.banned, chat_participant.left)
+            else:
+                data_blocked = chat_participant.banned or chat_participant.left
+            messages = self.message_repo.get_messages_by_chat(chat_participant.chat_id, data_add, data_blocked)
+            if messages is None:
+                raise errors.NoMessages(chat_id=chat_participant.chat_id)
+            return messages
 
     @join_point
     @validate_with_dto
