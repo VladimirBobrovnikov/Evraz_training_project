@@ -1,5 +1,6 @@
 POST http://127.0.0.1:8000/api/profil/create_user
 Content-Type: application/json
+#create user 1
 
 {
   "login": "vova",
@@ -8,12 +9,13 @@ Content-Type: application/json
 
 ###
 GET http://127.0.0.1:8000/api/profil/user
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.0dqY5M-dD_tYHeB2q_qLlKrKW4Svo3c9rp21lQuebE4
-
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.9CoutgnPd2n89dwd-4Hw3armwf3yYIlGRHQ9bMeUvb0
+#get user 1
 ###
 POST http://127.0.0.1:8000/api/messanger/create_chat
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.0dqY5M-dD_tYHeB2q_qLlKrKW4Svo3c9rp21lQuebE4
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.9CoutgnPd2n89dwd-4Hw3armwf3yYIlGRHQ9bMeUvb0
 Content-Type: application/json
+#create chat 1 and chat-participants with user-creator (user 1)
 
 {
   "title": "vovin chat",
@@ -21,8 +23,9 @@ Content-Type: application/json
 }
 ###
 POST http://127.0.0.1:8000/api/messanger/send_message
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.0dqY5M-dD_tYHeB2q_qLlKrKW4Svo3c9rp21lQuebE4
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.9CoutgnPd2n89dwd-4Hw3armwf3yYIlGRHQ9bMeUvb0
 Content-Type: application/json
+#create message in chat 1 by user 1
 
 {
   "chat_id": 1,
@@ -30,13 +33,14 @@ Content-Type: application/json
 }
 ###
 GET http://127.0.0.1:8000/api/messanger/chat?chat_id=1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.0dqY5M-dD_tYHeB2q_qLlKrKW4Svo3c9rp21lQuebE4
-
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.9CoutgnPd2n89dwd-4Hw3armwf3yYIlGRHQ9bMeUvb0
+#get info chat 1
 
 ###
 POST http://127.0.0.1:8000/api/messanger/change_chat_info
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.0dqY5M-dD_tYHeB2q_qLlKrKW4Svo3c9rp21lQuebE4
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.9CoutgnPd2n89dwd-4Hw3armwf3yYIlGRHQ9bMeUvb0
 Content-Type: application/json
+#change info chat 1
 
 {
   "chat_id": 1,
@@ -44,23 +48,27 @@ Content-Type: application/json
 }
 ###
 GET http://127.0.0.1:8000/api/messanger/chat?chat_id=1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.0dqY5M-dD_tYHeB2q_qLlKrKW4Svo3c9rp21lQuebE4
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.9CoutgnPd2n89dwd-4Hw3armwf3yYIlGRHQ9bMeUvb0
+#get changed info chat 1
 ###
 POST http://127.0.0.1:8000/api/profil/create_user
 Content-Type: application/json
+#create user 2
 
 {
   "login": "vasya",
   "password": 2222
 }
-###
-GET http://127.0.0.1:8000/api/profil/user
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImxvZ2luIjoidmFzeWEiLCJuYW1lIjoidmFzeWEiLCJwYXNzd29yZCI6IjIyMjIiLCJncm91cHMiOiJhZG1pbnMifQ.R_fwWSnrXakaCDXsyhrhtqWqkhRO9jUs5cE9GEtsHm8
 
 ###
+GET http://127.0.0.1:8000/api/profil/user
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImxvZ2luIjoidmFzeWEiLCJuYW1lIjoidmFzeWEiLCJwYXNzd29yZCI6IjIyMjIiLCJncm91cHMiOiJhZG1pbnMifQ.wQl6QBLB8NrhdetxoyusberjiZX1O1Gq8ua-65671xs
+#get user 2
+###
 POST http://127.0.0.1:8000/api/messanger/add_user_to_chat
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.0dqY5M-dD_tYHeB2q_qLlKrKW4Svo3c9rp21lQuebE4
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.9CoutgnPd2n89dwd-4Hw3armwf3yYIlGRHQ9bMeUvb0
 Content-Type: application/json
+#add user 2 into chat 1
 
 {
   "chat_id": 1,
@@ -69,10 +77,20 @@ Content-Type: application/json
 
 ###
 GET http://127.0.0.1:8000/api/messanger/chats_users?chat_id=1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.0dqY5M-dD_tYHeB2q_qLlKrKW4Svo3c9rp21lQuebE4
-
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.9CoutgnPd2n89dwd-4Hw3armwf3yYIlGRHQ9bMeUvb0
+#get all users in chat 1 by user 1
 ###
 GET http://127.0.0.1:8000/api/messanger/chats_message?chat_id=1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.0dqY5M-dD_tYHeB2q_qLlKrKW4Svo3c9rp21lQuebE4
-
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.9CoutgnPd2n89dwd-4Hw3armwf3yYIlGRHQ9bMeUvb0
+#get all messange in chat 1 by user 1
+###
+#POST http://127.0.0.1:8000/api/messanger/delete_chat
+#Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImxvZ2luIjoidm92YSIsIm5hbWUiOiJ2b3ZhIiwicGFzc3dvcmQiOiIxMjM0IiwiZ3JvdXBzIjoiYWRtaW5zIn0.9CoutgnPd2n89dwd-4Hw3armwf3yYIlGRHQ9bMeUvb0
+#Content-Type: application/json
+##delet chat 1
+#
+#{
+#  "chat_id": 1
+#}
+#
 ###

@@ -1,5 +1,5 @@
 from classic.http_auth import Group, Permission, strategies
-
+import os
 
 class Permissions:
     FULL_CONTROL = Permission('full_control')
@@ -17,7 +17,7 @@ dummy_strategy = strategies.Dummy(
 )
 
 jwt_strategy = strategies.JWT(
-    secret_key='Very secret_key'
+    secret_key=str(os.getenv('SECRET_KEY'))
 )
 
 ALL_GROUPS = (Groups.ADMINS, )

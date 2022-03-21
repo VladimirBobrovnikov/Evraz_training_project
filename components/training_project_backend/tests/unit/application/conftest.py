@@ -17,7 +17,13 @@ def user_repo(user_with_id_1, user_with_id_2, user_with_id_3, user_with_id_4):
 def chat_repo(chat_with_id_1, chat_with_id_2):
     chat_repo = Mock(interfaces.ChatsRepo)
     chat_repo.get_by_id = Mock(return_value=chat_with_id_1)
+    return chat_repo
 
+
+@pytest.fixture(scope='function')
+def chat_repo_with_empty_get_by_id(chat_with_id_1, chat_with_id_2):
+    chat_repo = Mock(interfaces.ChatsRepo)
+    chat_repo.get_by_id = Mock(return_value=None)
     return chat_repo
 
 

@@ -122,6 +122,14 @@ class Messanger:
 			'message': 'You had block the user'
 		}
 
+	@join_point
+	@authenticate
+	def on_post_delete_chat(self, request, response):
+		self.messanger.delete_chat(user_id=request.context.client.user_id, **request.media)
+		response.media = {
+			'message': 'Chat successfully deleted'
+		}
+
 
 @authenticator_needed
 @component

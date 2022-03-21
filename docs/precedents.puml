@@ -7,8 +7,8 @@ left to right direction
 
 rectangle "Авторизация" {
   usecase "Зарегистрироваться" as sign_up
-  usecase "Авторизоваться" as sign_in
-  usecase "Разлогиниться" as logout
+'  usecase "Авторизоваться" as sign_in
+'  usecase "Разлогиниться" as logout
 
 }
 
@@ -37,13 +37,12 @@ rectangle "Сообщения" {
 
 actor "Гость" as guest
 guest -- sign_up
-guest -- sign_in
+'guest -- sign_in
 
 actor "Пользователь" as user
-user -- logout
+'user -- logout
 user -- create_chat
-user -- leave_chat
-'user -- return_in_chat
+
 
 actor "Создатель чата" as chat_creator
 chat_creator -- change_chat
@@ -57,4 +56,5 @@ chat_participant -- get_users_list
 chat_participant -- chat_info
 chat_participant -- create_message
 chat_participant -- return_in_chat
+chat_participant -- leave_chat
 @enduml

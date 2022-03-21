@@ -2,7 +2,7 @@ from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    DB_URL: str = 'sqlite:///simple_chat.db'
+    DB_URL: str = 'sqlite:///messanger.db'
 
 
     # Python путь к каталогу, где лежит запускатор alembic

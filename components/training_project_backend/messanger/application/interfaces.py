@@ -47,9 +47,9 @@ class ChatsRepo(ABC):
     def update(self, id_: int, chat: Chat) -> Chat:
         ...
 
-    # @abstractmethod
-    # def delete(self, chat_id: int):
-    #     ...
+    @abstractmethod
+    def delete(self, chat: Chat):
+        ...
 
 
 class ChatParticipantRepo(ABC):

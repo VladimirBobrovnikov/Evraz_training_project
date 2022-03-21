@@ -75,8 +75,8 @@ class ChatRepo(BaseRepository, interfaces.ChatsRepo):
 		query = update(Chat).where(Chat.id == id_).values(**values)
 		self.session.execute(query)
 
-# def delete(self, chat_id: int):
-#     pass
+	def delete(self, chat: Chat):
+		self.session.delete(chat)
 
 
 @component

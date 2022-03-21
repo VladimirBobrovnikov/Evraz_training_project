@@ -54,6 +54,7 @@ class ChatParticipantInfo(DTO):
     user_id: int
     id_user_modified: int
 
+
 @component
 class Messanger:
     chat_repo: interfaces.ChatsRepo
@@ -86,11 +87,13 @@ class Messanger:
             date_added=datetime.datetime.utcnow().timestamp())
         self.chat_participant_repo.add_user_to_chat(chat_participant)
 
-    # @join_point
-    # @validate_arguments
-    # def delete_chat(self, chat_id: id):
-    #     self.chat_repo.delete(chat_id)
-
+    @join_point
+    @validate_arguments
+    def delete_chat(self, user_id: int, chat_id: int):
+        chat_participant = self._check_chat_participant(chat_id, user_id)
+        if chat_participant.creator:
+            chat = self.chat_repo.get_by_id(chat_id)
+            self.chat_repo.delete(chat)
 
     @join_point
     @validate_arguments()
@@ -137,7 +140,6 @@ class Messanger:
             self.chat_participant_repo.block_user(blocked_chat_participant)
         else:
             raise errors.NoCreatorsPermissions(chat_id=chat_participant_info.chat_id)
-
 
     @join_point
     @validate_arguments
@@ -216,7 +218,7 @@ class Profil:
             'password': user.password,
             'groups': 'admins',
         }
-        token = jwt.encode(payload=payload, key='Very secret_key')
+        token = jwt.encode(payload=payload, key=str(os.getenv('SECRET_KEY')))
         return token
 
     @join_point
@@ -236,6 +238,3 @@ class Profil:
             return user
         else:
             raise errors.NoUser
-
-
-
