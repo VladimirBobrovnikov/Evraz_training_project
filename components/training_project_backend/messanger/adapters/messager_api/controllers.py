@@ -100,7 +100,7 @@ class Messanger:
 	@join_point
 	@authenticate
 	def on_post_left(self, request, response):
-		self.messanger.left(**request.media)
+		self.messanger.left(user_id=request.context.client.user_id, **request.media)
 		response.media = {
 			'message': 'You have left the chat'
 		}
@@ -108,9 +108,18 @@ class Messanger:
 	@join_point
 	@authenticate
 	def on_post_return_to_chat(self, request, response):
-		self.messanger.return_to_chat(**request.media)
+		self.messanger.return_to_chat(user_id=request.context.client.user_id, **request.media)
 		response.media = {
 			'message': f'You have return to the chat'
+		}
+
+
+	@join_point
+	@authenticate
+	def on_post_block_user(self, request, response):
+		self.messanger.block_user(user_id=request.context.client.user_id, **request.media)
+		response.media = {
+			'message': 'You had block the user'
 		}
 
 

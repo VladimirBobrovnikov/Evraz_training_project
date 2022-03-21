@@ -52,12 +52,7 @@ class MessageInfo(DTO):
 class ChatParticipantInfo(DTO):
     chat_id: int
     user_id: int
-    creator: bool = False
-    banned: bool = False
-    came_out: bool = False
-    date_added: float = datetime.datetime.utcnow().timestamp()
-    id: Optional[int] = None
-
+    id_user_modified: int
 
 @component
 class Messanger:
@@ -100,10 +95,12 @@ class Messanger:
     @join_point
     @validate_arguments()
     def add_user_to_chat(self, user_id: int, chat_id: int, user_id_to_added: int) -> int:
-        chat_participant = self.chat_participant_repo.search_chat_participant(chat_id, user_id)
-        if chat_participant and chat_participant.creator:
+        chat_participant = self._check_chat_participant(chat_id, user_id)
+        if chat_participant.creator:
             new_chat_participant = ChatParticipant(chat_id, user_id=user_id_to_added)
             return self.chat_participant_repo.add_user_to_chat(new_chat_participant)
+        else:
+            raise errors.NoCreatorsPermissions(chat_id=chat_id)
 
     @join_point
     @validate_arguments
@@ -116,28 +113,38 @@ class Messanger:
     @join_point
     @validate_with_dto
     def change_chat_info(self, chat_info: ChatInfoForChange):
-        chat_participant = self.chat_participant_repo.search_chat_participant(chat_info.chat_id, chat_info.user_id)
-        if chat_participant and chat_participant.creator:
+        chat_participant = self._check_chat_participant(chat_info.chat_id, chat_info.user_id)
+        if chat_participant.creator:
             old_chat = self.chat_repo.get_by_id(chat_info.chat_id)
             if chat_info.title:
                 old_chat.title = chat_info.title
             if chat_info.description:
                 old_chat.description = chat_info.description
             self.chat_repo.update(chat_info.chat_id, old_chat)
+        else:
+            raise errors.NoCreatorsPermissions(chat_id=chat_info.chat_id)
 
     @join_point
     @validate_with_dto
     def block_user(self, chat_participant_info: ChatParticipantInfo):
-        chat_participant = chat_participant_info.create_obj(ChatParticipant)
-        self.chat_participant_repo.block_user(chat_participant)
+        chat_participant = self._check_chat_participant(
+            chat_participant_info.chat_id,
+            chat_participant_info.user_id)
+        if chat_participant.creator:
+            blocked_chat_participant = self._check_chat_participant(
+                chat_participant_info.chat_id,
+                chat_participant_info.id_user_modified)
+            self.chat_participant_repo.block_user(blocked_chat_participant)
+        else:
+            raise errors.NoCreatorsPermissions(chat_id=chat_participant_info.chat_id)
+
 
     @join_point
     @validate_arguments
     def get_chats_users(self, user_id: int, chat_id: int) -> List[User]:
-        chat_participant = self.chat_participant_repo.search_chat_participant(chat_id, user_id)
-        if chat_participant:
-            participants = self.chat_participant_repo.get_chats_users(chat_id)
-            return [self.user_repo.get_by_id(participant.user_id) for participant in participants]
+        self._check_chat_participant(chat_id, user_id)
+        participants = self.chat_participant_repo.get_chats_users(chat_id)
+        return [self.user_repo.get_by_id(participant.user_id) for participant in participants]
 
     @join_point
     @validate_with_dto
@@ -148,29 +155,48 @@ class Messanger:
     @join_point
     @validate_arguments()
     def get_chats_message(self, user_id: int, chat_id: int) -> Optional[List[Message]]:
-        chat_participant = self.chat_participant_repo.search_chat_participant(chat_id, user_id)
-        if chat_participant:
-            data_add = chat_participant.date_added
-            if chat_participant.banned and chat_participant.left:
-                data_blocked = min(chat_participant.banned, chat_participant.left)
-            else:
-                data_blocked = chat_participant.banned or chat_participant.left
-            messages = self.message_repo.get_messages_by_chat(chat_participant.chat_id, data_add, data_blocked)
-            if messages is None:
-                raise errors.NoMessages(chat_id=chat_participant.chat_id)
-            return messages
+        chat_participant = self._check_chat_participant(chat_id, user_id)
+        data_add = chat_participant.date_added
+        if chat_participant.banned and chat_participant.left:
+            data_blocked = min(chat_participant.banned, chat_participant.left)
+        else:
+            data_blocked = chat_participant.banned or chat_participant.left
+        messages = self.message_repo.get_messages_by_chat(chat_participant.chat_id, data_add, data_blocked)
+        if messages is None:
+            raise errors.NoMessages(chat_id=chat_participant.chat_id)
+        return messages
 
     @join_point
     @validate_with_dto
     def left(self, chat_participant_info: ChatParticipantInfo):
-        chat_participant = chat_participant_info.create_obj(ChatParticipant)
-        self.chat_participant.left(chat_participant)
+        chat_participant = self._check_chat_participant(
+            chat_participant_info.chat_id,
+            chat_participant_info.user_id)
+        if chat_participant_info.user_id == chat_participant_info.id_user_modified:
+            self.chat_participant_repo.left(chat_participant)
+        else:
+            raise errors.NoPermissionsForChange(user_id=chat_participant_info.id_user_modified)
 
     @join_point
     @validate_with_dto
     def return_to_chat(self, chat_participant_info: ChatParticipantInfo):
-        chat_participant = chat_participant_info.create_obj(ChatParticipant)
-        self.chat_participant.return_to_chat(chat_participant)
+        chat_participant = self._check_chat_participant(
+            chat_participant_info.chat_id,
+            chat_participant_info.user_id)
+        if chat_participant_info.user_id == chat_participant_info.id_user_modified:
+            self.chat_participant_repo.return_to_chat(chat_participant)
+        else:
+            raise errors.NoPermissionsForChange(user_id=chat_participant_info.id_user_modified)
+
+    @join_point
+    def _check_chat_participant(self, user_id: int, chat_id: int) -> ChatParticipant:
+        chat_participant = self.chat_participant_repo.search_chat_participant(
+            chat_id,
+            user_id)
+        if chat_participant:
+            return chat_participant
+        else:
+            raise errors.NoChatParticipant(id=user_id)
 
 
 @component
@@ -196,11 +222,20 @@ class Profil:
     @join_point
     @validate_arguments
     def get_user_by_id(self, user_id: int):
-        return self.user_repo.get_by_id(user_id)
+        user = self.user_repo.get_by_id(user_id)
+        if user:
+            return user
+        else:
+            raise errors.NoUser
 
     @join_point
     @validate_arguments
     def get_user_by_login(self, login: str) -> Optional[User]:
-        return self.user_repo.get_by_login(login)
+        user = self.user_repo.get_by_login(login)
+        if user:
+            return user
+        else:
+            raise errors.NoUser
+
 
 
